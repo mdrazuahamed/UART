@@ -1,14 +1,21 @@
-module uart 	(
+module uart #(
+  	parameter DEPTH = 5
+)
+(
 	input logic  clk,
 	input logic  rx,
 	input logic  rst,
-	output logic tx
-
-	);
+  	input logic  tx_in,
+	output logic tx,
+  	//output logic [DEPTH-1:0]rx_out
+ );
+  	
     logic [2:0]count;
 	typedef enum {IDLE, START, DATA,STOP} state_t;
 	state_t pstate,nstate;
 	
+  	assign tx = tx_in;
+  	assign rx_out = rx;
 	always_comb 
 		begin
 	
@@ -38,7 +45,7 @@ module uart 	(
 			else         nstate = DATA;
 		end
 		STOP: if(rx)	     nstate = IDLE;
-		      else 	     nstate = STOP;
+		      else 	         nstate = STOP;
 		endcase
 	end
 		
@@ -68,3 +75,4 @@ module uart 	(
 		end
 	end
 endmodule
+
