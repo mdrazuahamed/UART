@@ -1,32 +1,30 @@
 module uart_top_tb;
 	bit    clk;
-	logic  rx;
 	logic  rst;
-	logic tx;
+  	logic  enable;
+	logic  [4:0]data_in;
+ 	logic  [4:0]data_out;
 
-    uart_top ins1(
-	   	.clk(clk),
-      	.rx_t(rx),
-	   	.rst(rst),
-      	.tx_t(tx)
-	   );
+uart_top ins1
+  (
+    .clk		(clk),
+    .rst		(rst),
+    .data_in	(data_in),
+    .enable		(enable),
+    .data_out	(data_out) 
+);
 	 always #5 clk = ~ clk;
-  	initial begin
+  	 initial begin
     	clk=0;
-        tx =1;
-      repeat (5) @(negedge clk);
-      	tx = 0;
-      @(negedge clk);
-      	tx = 0;
-      @(negedge clk);
-      	tx = 0;
-      @(negedge clk);
-      	tx = 1;
-      @(negedge clk);
-      	tx = 1;
-      @(negedge clk);
-      	tx = 1;
-      #400 $finish;
+        rst=0;
+       	enable = 0;
+       #15 rst = 1;
+       	   data_in=5'b11001;
+       	   enable = 1;
+       #5
+       	   enable = 0;
+       
+       #200 $finish;  
      end 
   	initial begin
       $dumpfile("dump.vcd");
@@ -35,4 +33,3 @@ module uart_top_tb;
   	end
 
 endmodule 
-
