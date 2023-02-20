@@ -38,13 +38,13 @@ module uart #(
     	end
      	
       else if(enable==0)
-        begin
+      begin
           temp_piso<= {temp_piso[DEPTH-2:0],1'b1};
        	  tx <=temp_piso[DEPTH-1];
-    	end
-  	end
+      end
+  end
  
-  	always_comb
+  always_comb
 		begin
 		case(pstate)
 	
