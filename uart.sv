@@ -6,27 +6,26 @@ module uart #(
 	input logic  			rx,
 	input logic  			rst,
   	input logic 			enable,
-  	input logic  [DEPTH-1:0]data_in,
+  	input logic  [DEPTH-1:0]	data_in,
 	output logic 			tx,
-  	output logic [DEPTH-1:0]data_out
+  	output logic [DEPTH-1:0]	data_out
  );
 
-  logic 		[2:0]						count;//for counting DATA state staying time
-  logic 			  [DEPTH-1:0]						temp_sipo,temp_piso;
-  typedef enum 	logic [1:0] {IDLE, START, DATA,STOP} 	state_t;
-  state_t 												pstate,nstate;
+	logic 	      [2:0]  		count;//for counting DATA state staying time
+	logic 	      {DEPTH-1:0] 	temp_sipo,temp_piso;
+        typedef enum 	logic [1:0] 	{IDLE, START, DATA,STOP} 	state_t;
+        state_t 	        	pstate,nstate;
 	
   always_ff@(posedge clk) begin//Sipo construction | rx
-    if(nstate==IDLE | nstate == START) begin
-      		temp_sipo <=5'b0;
-    		data_out	<= 	5'b0;
-    end
-    else if(nstate==DATA)
+    	if(nstate==IDLE | nstate == START) begin
+      		temp_sipo <= 5'b0;
+    		data_out <= 5'b0;
+   	end
+    	else if(nstate==DATA)
     		temp_sipo <= {temp_sipo[DEPTH-2:0],rx}; 
     
-    else if(nstate==STOP)
+    	else if(nstate==STOP)
       		data_out <=	temp_sipo;
-      		
   end
 
   always_ff@(posedge clk)//PISO construction |tx
